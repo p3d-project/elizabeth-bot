@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import fs from 'fs';
 import { Client, GatewayIntentBits, Events, ChannelType } from 'discord.js';
-
-const GOOGLE_FORM_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSeAs_gMYAC4H030Y2St010RiTLwut8jJ-G5O-a9IhdlGCmOVQ/viewform?usp=dialog';
 const configPath = './config.json';
 
 // --- CONFIG MANAGEMENT ---
@@ -10,7 +8,7 @@ function loadConfig() {
   if (fs.existsSync(configPath)) {
     return JSON.parse(fs.readFileSync(configPath, 'utf8'));
   }
-  return { APPLICANT_ROLE_ID: null, TEAM_LEAD_ROLE_ID: null, APP_CHANNEL_ID: null };
+  return { APPLICANT_ROLE_ID: null, TEAM_LEAD_ROLE_ID: null, APP_CHANNEL_ID: null, FORM_LINK: null };
 }
 
 function saveConfig(config) {
@@ -33,7 +31,7 @@ client.once(Events.ClientReady, c => {
 
 // --- AUTOMATED ONBOARDING TRIGGER ---
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
-  if (!appConfig.APPLICANT_ROLE_ID || !appConfig.APP_CHANNEL_ID) return;
+  if (!appConfig.APPLICANT_ROLE_ID || !appConfig.APP_CHANNEL_ID || !appConfig.FORM_LINK) return;
 
   const hadRole = oldMember.roles.cache.has(appConfig.APPLICANT_ROLE_ID);
   const hasRole = newMember.roles.cache.has(appConfig.APPLICANT_ROLE_ID);
@@ -52,7 +50,7 @@ client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
       });
 
       // Ping user and send instructions
-      await thread.send(`Welcome <@${newMember.id}>!\n\nTo continue your application, please fill out this form: **[Team Application Form](${GOOGLE_FORM_LINK})**\n\nOnce completed, our Team Leads (<@&${appConfig.TEAM_LEAD_ROLE_ID}>) will review it and reply to you directly in this thread.`);
+      await thread.send(`Welcome <@${newMember.id}>!\n\nTo continue your application, please fill out this form: **[Team Application Form](${appConfig.FORM_LINK})**\n\nOnce completed, our Team Leads (<@&${appConfig.TEAM_LEAD_ROLE_ID}>) will review it and reply to you directly in this thread.`);
 
     } catch (error) {
       console.error('Failed to execute automated workflow:', error);
@@ -70,6 +68,7 @@ client.on(Events.InteractionCreate, async interaction => {
     appConfig.APPLICANT_ROLE_ID = interaction.options.getRole('applicant_role').id;
     appConfig.TEAM_LEAD_ROLE_ID = interaction.options.getRole('team_lead_role').id;
     appConfig.APP_CHANNEL_ID = interaction.options.getChannel('app_channel').id;
+    appConfig.FORM_LINK = interaction.options.getString('form_link');
     saveConfig(appConfig);
 
     await interaction.reply({ content: '✅ Configuration saved successfully!', ephemeral: true });

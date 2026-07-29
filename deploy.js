@@ -8,7 +8,8 @@ const commands = [
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addRoleOption(opt => opt.setName('applicant_role').setDescription('Applicant role').setRequired(true))
     .addRoleOption(opt => opt.setName('team_lead_role').setDescription('Team Lead role for pinging').setRequired(true))
-    .addChannelOption(opt => opt.setName('app_channel').setDescription('Channel where private threads will be created').setRequired(true)),
+    .addChannelOption(opt => opt.setName('app_channel').setDescription('Channel where private threads will be created').setRequired(true))
+    .addStringOption(opt => opt.setName('form_link').setDescription('The Google Form link for applications').setRequired(true)),
     
   new SlashCommandBuilder()
     .setName('approve')
