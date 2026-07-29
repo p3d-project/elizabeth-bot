@@ -1,0 +1,31 @@
+name: Deploy to Oracle VPS
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~
+            cd elizabeth-bot/
+            git pull origin main
+            
+            # Write the env secret directly into a .env file on the server
+            echo "${{ secrets.ENV }}" > .env
+            
+            npm install
+            
+            # Automatically push any new slash command updates to Discord
+            npm run register
+            
+            # Restart the bot
+            pm2 restart elizabeth-bot
