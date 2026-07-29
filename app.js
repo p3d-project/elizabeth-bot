@@ -89,7 +89,7 @@ client.on(Events.InteractionCreate, async interaction => {
       }
       
       const roleMentions = rolesToAssign.map(r => `<@&${r.id}>`).join(', ');
-      await interaction.reply({ content: `✅ Application approved for: ${roleMentions}.` });
+      await interaction.reply({ content: `✅ Application approved for: ${roleMentions}. Welcome to the team!` });
     } catch (error) {
       console.error(error);
       await interaction.reply({ content: '❗️ Failed to assign roles. Check bot hierarchy.', ephemeral: true });
@@ -106,7 +106,7 @@ client.on(Events.InteractionCreate, async interaction => {
       ? rolesToReject.map(r => `<@&${r.id}>`).join(', ') 
       : 'all applied positions';
 
-    await interaction.reply({ content: `❌ Application declined for: ${roleMentions}.` });
+    await interaction.reply({ content: `❌ Application declined for: ${roleMentions}. Feel free to apply again at a later date.` });
   }
 
   if (commandName === 'close_ticket') {
@@ -114,7 +114,7 @@ client.on(Events.InteractionCreate, async interaction => {
     
     try {
       await targetMember.roles.remove(appConfig.APPLICANT_ROLE_ID);
-      await interaction.reply({ content: 'Ticket closed. Archiving thread in 5 seconds...' });
+      await interaction.reply({ content: '❗️ Ticket closed. Archiving thread in 5 seconds...' });
 
       setTimeout(async () => {
         try {
@@ -126,7 +126,7 @@ client.on(Events.InteractionCreate, async interaction => {
       }, 5000);
     } catch (error) {
       console.error(error);
-      await interaction.reply({ content: '❌ Failed to remove applicant role.', ephemeral: true });
+      await interaction.reply({ content: '❗️ Failed to remove applicant role.', ephemeral: true });
     }
   }
 });
