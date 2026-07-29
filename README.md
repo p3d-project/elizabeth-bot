@@ -61,6 +61,7 @@ Finalizes the application lifecycle and cleans up the server.
 ---
 
 ## Legal
+Elizabeth bot icon image sourced from [MegaTen Wiki]( https://megatenwiki.com/wiki/File:P3_Elizabeth_Artwork.png)
 ### License
 Original work under the MIT License, Copyright (c) 2022 Shay DeWael
 The repo is licensed under the Creative Commons **Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).**
