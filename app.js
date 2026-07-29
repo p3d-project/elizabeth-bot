@@ -52,7 +52,7 @@ client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
       });
 
       // Ping user and send instructions
-      await thread.send(`Welcome <@${newMember.id}>!\n\nTo continue your application, please fill out this form: **[Team Application Form](${GOOGLE_FORM_LINK})**\n\nOnce completed, our Team Leads will review it and reply to you directly in this thread.`);
+      await thread.send(`Welcome <@${newMember.id}>!\n\nTo continue your application, please fill out this form: **[Team Application Form](${GOOGLE_FORM_LINK})**\n\nOnce completed, our Team Leads (<@&${appConfig.TEAM_LEAD_ROLE_ID}>) will review it and reply to you directly in this thread.`);
 
     } catch (error) {
       console.error('Failed to execute automated workflow:', error);
